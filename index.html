@@ -42,7 +42,7 @@ h1{font-size:48px;margin:10px}
 }
 button{
   width:100%;
-  padding:12px;
+  padding:14px;
   border:0;
   border-radius:10px;
   background:#1595ff;
@@ -60,6 +60,7 @@ input,textarea{
   padding:12px;
   border-radius:9px;
   margin:6px 0 12px;
+  font-size:16px;
 }
 .box{
   background:#0d2035;
@@ -75,7 +76,6 @@ input,textarea{
   margin-top:15px;
   display:none;
 }
-
 .payment{
   margin-top:20px;
   padding:20px;
@@ -84,7 +84,6 @@ input,textarea{
   border-radius:16px;
   text-align:center;
 }
-
 .payment img{
   display:block;
   width:100%;
@@ -95,13 +94,11 @@ input,textarea{
   box-sizing:border-box;
   border-radius:10px;
 }
-
 .payment-amount{
   font-size:30px;
   font-weight:900;
   margin:10px 0 15px;
 }
-
 .whatsapp{
   display:block;
   text-decoration:none;
@@ -112,13 +109,11 @@ input,textarea{
   font-weight:900;
   margin-top:15px;
 }
-
 .note{
   font-size:14px;
   opacity:.85;
   line-height:1.5;
 }
-
 @media(max-width:700px){
   .grid{grid-template-columns:1fr}
   h1{font-size:38px}
@@ -129,10 +124,10 @@ input,textarea{
 <body>
 
 <header>
-  <div class="wrap">
-    <h1>ARKAN <span class="blue">STORE</span></h1>
-    <p>Top Up Koin & Joki Ring</p>
-  </div>
+<div class="wrap">
+<h1>ARKAN <span class="blue">STORE</span></h1>
+<p>Top Up Koin & Joki Ring</p>
+</div>
 </header>
 
 <main class="wrap">
@@ -145,21 +140,27 @@ input,textarea{
 <h3>250K Koin</h3>
 <p>250.000 koin</p>
 <div class="price">Rp3.000</div>
-<button onclick="pick('Top Up 250K Koin',3000)">Pilih</button>
+<button type="button" onclick="pick('Top Up 250K Koin',3000)">
+Pilih
+</button>
 </div>
 
 <div class="card">
 <h3>1M Koin</h3>
 <p>1.000.000 koin</p>
 <div class="price">Rp10.000</div>
-<button onclick="pick('Top Up 1M Koin',10000)">Pilih</button>
+<button type="button" onclick="pick('Top Up 1M Koin',10000)">
+Pilih
+</button>
 </div>
 
 <div class="card">
 <h3>3M Koin</h3>
 <p>3.000.000 koin</p>
 <div class="price">Rp30.000</div>
-<button onclick="pick('Top Up 3M Koin',30000)">Pilih</button>
+<button type="button" onclick="pick('Top Up 3M Koin',30000)">
+Pilih
+</button>
 </div>
 
 </div>
@@ -172,21 +173,27 @@ input,textarea{
 <h3>Basic</h3>
 <p>Mulai dari</p>
 <div class="price">Rp50.000</div>
-<button onclick="pick('Joki Ring Basic',50000)">Pilih</button>
+<button type="button" onclick="pick('Joki Ring Basic',50000)">
+Pilih
+</button>
 </div>
 
 <div class="card">
 <h3>Pro</h3>
 <p>Target lebih tinggi</p>
 <div class="price">Rp100.000</div>
-<button onclick="pick('Joki Ring Pro',100000)">Pilih</button>
+<button type="button" onclick="pick('Joki Ring Pro',100000)">
+Pilih
+</button>
 </div>
 
 <div class="card">
 <h3>Custom</h3>
 <p>Harga berdasarkan target</p>
 <div class="price">Custom</div>
-<button onclick="pick('Joki Ring Custom',0)">Pilih</button>
+<button type="button" onclick="pick('Joki Ring Custom',0)">
+Pilih
+</button>
 </div>
 
 </div>
@@ -203,20 +210,27 @@ input,textarea{
 
 <div id="customBox" style="display:none">
 <label>Nominal Custom</label>
-<input id="customPrice" type="number" min="1"
+<input
+id="customPrice"
+type="number"
+min="1"
 placeholder="Masukkan nominal pembayaran">
 </div>
 
 <label>Nama / Username</label>
-<input id="name">
+<input id="name" placeholder="Masukkan nama / username">
 
 <label>ID Game</label>
-<input id="gameid">
+<input id="gameid" placeholder="Masukkan ID game">
 
 <label>Detail / Target</label>
-<textarea id="detail"></textarea>
+<textarea
+id="detail"
+placeholder="Masukkan detail pesanan"></textarea>
 
-<button onclick="createOrder()">Buat Pesanan</button>
+<button type="button" onclick="createOrder()">
+Buat Pesanan
+</button>
 
 <div class="result" id="result"></div>
 
@@ -231,35 +245,41 @@ let selected = {
   price:0
 };
 
-const ADMIN = "6287781560968";
+const ADMIN_WA = "6287781560968";
 
 function rupiah(n){
-  return n
-    ? "Rp"+Number(n).toLocaleString("id-ID")
-    : "Custom";
+  if(!n) return "Custom";
+  return "Rp" + Number(n).toLocaleString("id-ID");
 }
 
 function pick(service,price){
 
-  selected = {
-    service:service,
-    price:price
-  };
+  selected.service = service;
+  selected.price = price;
 
   document.getElementById("service").value = service;
   document.getElementById("price").value = rupiah(price);
 
+  const customBox = document.getElementById("customBox");
+
   if(price === 0){
-    document.getElementById("customBox").style.display = "block";
+    customBox.style.display = "block";
   }else{
-    document.getElementById("customBox").style.display = "none";
+    customBox.style.display = "none";
   }
 
   document.getElementById("checkout")
-    .scrollIntoView({behavior:"smooth"});
+    .scrollIntoView({
+      behavior:"smooth"
+    });
 }
 
-async function createOrder(){
+function createOrder(){
+
+  if(!selected.service){
+    alert("Silakan pilih layanan terlebih dahulu.");
+    return;
+  }
 
   let finalPrice = selected.price;
 
@@ -275,137 +295,103 @@ async function createOrder(){
     }
   }
 
-  const nameValue =
+  const name =
     document.getElementById("name").value.trim();
 
-  const gameidValue =
+  const gameid =
     document.getElementById("gameid").value.trim();
 
-  const detailValue =
+  const detail =
     document.getElementById("detail").value.trim();
 
-  if(
-    !selected.service ||
-    !nameValue ||
-    !gameidValue
-  ){
-    alert("Pilih layanan dan isi Nama serta ID Game.");
+  if(!name){
+    alert("Nama / Username belum diisi.");
     return;
   }
 
-  const body = {
-    service:selected.service,
-    price:finalPrice,
-    name:nameValue,
-    gameid:gameidValue,
-    detail:detailValue
-  };
-
-  try{
-
-    const response = await fetch(
-      "/api/orders",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify(body)
-      }
-    );
-
-    const data = await response.json();
-
-    if(!response.ok){
-      alert(data.error || "Gagal membuat pesanan.");
-      return;
-    }
-
-    const orderId = data.id || "-";
-    const amount = rupiah(finalPrice);
-
-    const message =
-      "Halo Admin ARKAN STORE,%0A%0A"+
-      "Saya sudah bayar.%0A"+
-      "ID Pesanan: "+orderId+"%0A"+
-      "Layanan: "+selected.service+"%0A"+
-      "Nominal: "+amount+"%0A"+
-      "Nama/Username: "+nameValue+"%0A"+
-      "ID Game: "+gameidValue+"%0A"+
-      "Detail: "+detailValue;
-
-    const result =
-      document.getElementById("result");
-
-    result.style.display = "block";
-
-    result.innerHTML = `
-
-      <h3>✅ Pesanan Berhasil Dibuat</h3>
-
-      <p>
-        ID Pesanan:
-        <b>${orderId}</b>
-      </p>
-
-      <p>
-        Status:
-        <b>${data.payment_status || "Menunggu Pembayaran"}</b>
-      </p>
-
-      <div class="payment">
-
-        <h3>💳 QRIS ARKAN STORE</h3>
-
-        <p class="note">
-          Scan QRIS berikut menggunakan aplikasi
-          pembayaran yang mendukung QRIS.
-        </p>
-
-        <img
-          src="qris.jpg"
-          alt="QRIS ARKAN STORE"
-        >
-
-        <div>Nominal Pembayaran:</div>
-
-        <div class="payment-amount">
-          ${amount}
-        </div>
-
-        <p class="note">
-          Setelah pembayaran berhasil,
-          tekan tombol di bawah untuk konfirmasi
-          kepada admin.
-        </p>
-
-        <a
-          class="whatsapp"
-          href="https://wa.me/${ADMIN}?text=${message}"
-          target="_blank"
-        >
-          📱 Saya Sudah Bayar
-        </a>
-
-        <p class="note">
-          WhatsApp Admin:<br>
-          <b>087781560968</b>
-        </p>
-
-      </div>
-    `;
-
-  }catch(error){
-
-    alert(
-      "Pesanan tidak dapat dibuat. "+
-      "Pastikan server/API website aktif."
-    );
-
+  if(!gameid){
+    alert("ID Game belum diisi.");
+    return;
   }
+
+  const orderId =
+    "ARKAN-" + Date.now();
+
+  const amount = rupiah(finalPrice);
+
+  const message = encodeURIComponent(
+    "Halo Admin ARKAN STORE,\n\n" +
+    "Saya sudah bayar.\n" +
+    "ID Pesanan: " + orderId + "\n" +
+    "Layanan: " + selected.service + "\n" +
+    "Nominal: " + amount + "\n" +
+    "Nama/Username: " + name + "\n" +
+    "ID Game: " + gameid + "\n" +
+    "Detail: " + detail
+  );
+
+  const result =
+    document.getElementById("result");
+
+  result.style.display = "block";
+
+  result.innerHTML =
+
+    "<h3>✅ Pesanan Berhasil Dibuat</h3>" +
+
+    "<p>ID Pesanan: <b>" +
+    orderId +
+    "</b></p>" +
+
+    "<p>Status: <b>Menunggu Pembayaran</b></p>" +
+
+    '<div class="payment">' +
+
+    "<h3>💳 QRIS ARKAN STORE</h3>" +
+
+    '<p class="note">' +
+    "Scan QRIS berikut menggunakan aplikasi " +
+    "pembayaran yang mendukung QRIS." +
+    "</p>" +
+
+    '<img src="qris.jpg" ' +
+    'alt="QRIS ARKAN STORE">' +
+
+    "<div>Nominal Pembayaran:</div>" +
+
+    '<div class="payment-amount">' +
+    amount +
+    "</div>" +
+
+    '<p class="note">' +
+    "Setelah pembayaran berhasil, " +
+    "tekan tombol di bawah untuk konfirmasi " +
+    "kepada admin." +
+    "</p>" +
+
+    '<a class="whatsapp" ' +
+    'href="https://wa.me/' +
+    ADMIN_WA +
+    '?text=' +
+    message +
+    '" target="_blank" rel="noopener">' +
+
+    "📱 Saya Sudah Bayar — Hubungi Admin" +
+
+    "</a>" +
+
+    '<div class="note" style="margin-top:12px">' +
+    "WhatsApp Admin: <b>087781560968</b>" +
+    "</div>" +
+
+    "</div>";
+
+  result.scrollIntoView({
+    behavior:"smooth"
+  });
 }
 
 </script>
 
 </body>
-   </html>
+  </html>

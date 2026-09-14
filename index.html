@@ -1,45 +1,411 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ARKAN STORE</title>
+
 <style>
-body{margin:0;background:#07111f;color:#f5f9ff;font-family:system-ui,Arial} .wrap{max-width:900px;margin:auto;padding:24px}
-header{padding:55px 0;text-align:center;background:radial-gradient(circle at 50% 0,#14588d,transparent 55%)}h1{font-size:48px;margin:10px}.blue{color:#55c7ff}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.card{background:#0d2035;border:1px solid #214463;border-radius:18px;padding:18px}.price{font-size:25px;font-weight:900}
-button{width:100%;padding:12px;border:0;border-radius:10px;background:#1595ff;color:white;font-weight:900;cursor:pointer;margin-top:12px}
-input,textarea{width:100%;box-sizing:border-box;background:#071525;border:1px solid #294967;color:#fff;padding:12px;border-radius:9px;margin:6px 0 12px}
-.box{background:#0d2035;border:1px solid #214463;border-radius:18px;padding:20px;margin:25px 0}.result{padding:12px;background:#092d49;border-radius:10px;margin-top:15px;display:none}
-@media(max-width:700px){.grid{grid-template-columns:1fr}h1{font-size:38px}}
-</style></head>
-<body>
-<header><div class="wrap"><h1>ARKAN <span class="blue">STORE</span></h1><p>Top Up Koin & Joki Ring</p></div></header>
-<main class="wrap">
-<h2>🪙 Top Up Koin</h2><div class="grid">
-<div class="card"><h3>250K Koin</h3><p>250.000 koin</p><div class="price">Rp3.000</div><button onclick="pick('Top Up 250K Koin',3000)">Pilih</button></div>
-<div class="card"><h3>1M Koin</h3><p>1.000.000 koin</p><div class="price">Rp10.000</div><button onclick="pick('Top Up 1M Koin',10000)">Pilih</button></div>
-<div class="card"><h3>3M Koin</h3><p>3.000.000 koin</p><div class="price">Rp30.000</div><button onclick="pick('Top Up 3M Koin',30000)">Pilih</button></div>
-</div>
-<h2>🏆 Joki Ring</h2><div class="grid">
-<div class="card"><h3>Basic</h3><p>Mulai dari</p><div class="price">Rp50.000</div><button onclick="pick('Joki Ring Basic',50000)">Pilih</button></div>
-<div class="card"><h3>Pro</h3><p>Target lebih tinggi</p><div class="price">Rp100.000</div><button onclick="pick('Joki Ring Pro',100000)">Pilih</button></div>
-<div class="card"><h3>Custom</h3><p>Harga berdasarkan target</p><div class="price">Custom</div><button onclick="pick('Joki Ring Custom',0)">Pilih</button></div>
-</div>
-<div class="box" id="checkout"><h2>Checkout</h2>
-<label>Layanan</label><input id="service" readonly>
-<label>Harga</label><input id="price" readonly>
-<label>Nama / Username</label><input id="name">
-<label>ID Game</label><input id="gameid">
-<label>Detail / Target</label><textarea id="detail"></textarea>
-<button onclick="createOrder()">Buat Pesanan</button><div class="result" id="result"></div></div>
-</main>
-<script>
-let selected={service:"",price:0};
-function rupiah(n){return n?"Rp"+n.toLocaleString("id-ID"):"Custom"}
-function pick(service,price){selected={service,price};document.querySelector("#service").value=service;document.querySelector("#price").value=rupiah(price);document.querySelector("#checkout").scrollIntoView({behavior:"smooth"})}
-async function createOrder(){
- const body={service:selected.service,price:selected.price,name:name.value.trim(),gameid:gameid.value.trim(),detail:detail.value.trim()};
- if(!body.service||!body.name||!body.gameid){alert("Pilih layanan dan isi nama serta ID game.");return}
- const r=await fetch("/api/orders",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
- const d=await r.json(); if(!r.ok){alert(d.error);return}
- result.style.display="block";result.innerHTML=`Pesanan <b>${d.id}</b> dibuat.<br>Status: ${d.payment_status}<br><br>Langkah berikutnya: hubungkan tombol pembayaran ke payment gateway.`;
+body{
+  margin:0;
+  background:#07111f;
+  color:#f5f9ff;
+  font-family:system-ui,Arial;
 }
-</script></body></html>
+.wrap{
+  max-width:900px;
+  margin:auto;
+  padding:24px;
+}
+header{
+  padding:55px 0;
+  text-align:center;
+  background:radial-gradient(circle at 50% 0,#14588d,transparent 55%);
+}
+h1{font-size:48px;margin:10px}
+.blue{color:#55c7ff}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+.card{
+  background:#0d2035;
+  border:1px solid #214463;
+  border-radius:18px;
+  padding:18px;
+}
+.price{
+  font-size:25px;
+  font-weight:900;
+}
+button{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:10px;
+  background:#1595ff;
+  color:white;
+  font-weight:900;
+  cursor:pointer;
+  margin-top:12px;
+}
+input,textarea{
+  width:100%;
+  box-sizing:border-box;
+  background:#071525;
+  border:1px solid #294967;
+  color:#fff;
+  padding:12px;
+  border-radius:9px;
+  margin:6px 0 12px;
+}
+.box{
+  background:#0d2035;
+  border:1px solid #214463;
+  border-radius:18px;
+  padding:20px;
+  margin:25px 0;
+}
+.result{
+  padding:15px;
+  background:#092d49;
+  border-radius:10px;
+  margin-top:15px;
+  display:none;
+}
+
+.payment{
+  margin-top:20px;
+  padding:20px;
+  background:#071525;
+  border:1px solid #214463;
+  border-radius:16px;
+  text-align:center;
+}
+
+.payment img{
+  display:block;
+  width:100%;
+  max-width:420px;
+  margin:15px auto;
+  background:white;
+  padding:8px;
+  box-sizing:border-box;
+  border-radius:10px;
+}
+
+.payment-amount{
+  font-size:30px;
+  font-weight:900;
+  margin:10px 0 15px;
+}
+
+.whatsapp{
+  display:block;
+  text-decoration:none;
+  background:#18b957;
+  color:white;
+  padding:14px;
+  border-radius:10px;
+  font-weight:900;
+  margin-top:15px;
+}
+
+.note{
+  font-size:14px;
+  opacity:.85;
+  line-height:1.5;
+}
+
+@media(max-width:700px){
+  .grid{grid-template-columns:1fr}
+  h1{font-size:38px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>ARKAN <span class="blue">STORE</span></h1>
+    <p>Top Up Koin & Joki Ring</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<h2>🪙 Top Up Koin</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>250K Koin</h3>
+<p>250.000 koin</p>
+<div class="price">Rp3.000</div>
+<button onclick="pick('Top Up 250K Koin',3000)">Pilih</button>
+</div>
+
+<div class="card">
+<h3>1M Koin</h3>
+<p>1.000.000 koin</p>
+<div class="price">Rp10.000</div>
+<button onclick="pick('Top Up 1M Koin',10000)">Pilih</button>
+</div>
+
+<div class="card">
+<h3>3M Koin</h3>
+<p>3.000.000 koin</p>
+<div class="price">Rp30.000</div>
+<button onclick="pick('Top Up 3M Koin',30000)">Pilih</button>
+</div>
+
+</div>
+
+<h2>🏆 Joki Ring</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Basic</h3>
+<p>Mulai dari</p>
+<div class="price">Rp50.000</div>
+<button onclick="pick('Joki Ring Basic',50000)">Pilih</button>
+</div>
+
+<div class="card">
+<h3>Pro</h3>
+<p>Target lebih tinggi</p>
+<div class="price">Rp100.000</div>
+<button onclick="pick('Joki Ring Pro',100000)">Pilih</button>
+</div>
+
+<div class="card">
+<h3>Custom</h3>
+<p>Harga berdasarkan target</p>
+<div class="price">Custom</div>
+<button onclick="pick('Joki Ring Custom',0)">Pilih</button>
+</div>
+
+</div>
+
+<div class="box" id="checkout">
+
+<h2>🛒 Checkout</h2>
+
+<label>Layanan</label>
+<input id="service" readonly>
+
+<label>Harga</label>
+<input id="price" readonly>
+
+<div id="customBox" style="display:none">
+<label>Nominal Custom</label>
+<input id="customPrice" type="number" min="1"
+placeholder="Masukkan nominal pembayaran">
+</div>
+
+<label>Nama / Username</label>
+<input id="name">
+
+<label>ID Game</label>
+<input id="gameid">
+
+<label>Detail / Target</label>
+<textarea id="detail"></textarea>
+
+<button onclick="createOrder()">Buat Pesanan</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+</main>
+
+<script>
+
+let selected = {
+  service:"",
+  price:0
+};
+
+const ADMIN = "6287781560968";
+
+function rupiah(n){
+  return n
+    ? "Rp"+Number(n).toLocaleString("id-ID")
+    : "Custom";
+}
+
+function pick(service,price){
+
+  selected = {
+    service:service,
+    price:price
+  };
+
+  document.getElementById("service").value = service;
+  document.getElementById("price").value = rupiah(price);
+
+  if(price === 0){
+    document.getElementById("customBox").style.display = "block";
+  }else{
+    document.getElementById("customBox").style.display = "none";
+  }
+
+  document.getElementById("checkout")
+    .scrollIntoView({behavior:"smooth"});
+}
+
+async function createOrder(){
+
+  let finalPrice = selected.price;
+
+  if(finalPrice === 0){
+
+    finalPrice = Number(
+      document.getElementById("customPrice").value
+    );
+
+    if(!finalPrice || finalPrice < 1){
+      alert("Masukkan nominal Custom.");
+      return;
+    }
+  }
+
+  const nameValue =
+    document.getElementById("name").value.trim();
+
+  const gameidValue =
+    document.getElementById("gameid").value.trim();
+
+  const detailValue =
+    document.getElementById("detail").value.trim();
+
+  if(
+    !selected.service ||
+    !nameValue ||
+    !gameidValue
+  ){
+    alert("Pilih layanan dan isi Nama serta ID Game.");
+    return;
+  }
+
+  const body = {
+    service:selected.service,
+    price:finalPrice,
+    name:nameValue,
+    gameid:gameidValue,
+    detail:detailValue
+  };
+
+  try{
+
+    const response = await fetch(
+      "/api/orders",
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify(body)
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+      alert(data.error || "Gagal membuat pesanan.");
+      return;
+    }
+
+    const orderId = data.id || "-";
+    const amount = rupiah(finalPrice);
+
+    const message =
+      "Halo Admin ARKAN STORE,%0A%0A"+
+      "Saya sudah bayar.%0A"+
+      "ID Pesanan: "+orderId+"%0A"+
+      "Layanan: "+selected.service+"%0A"+
+      "Nominal: "+amount+"%0A"+
+      "Nama/Username: "+nameValue+"%0A"+
+      "ID Game: "+gameidValue+"%0A"+
+      "Detail: "+detailValue;
+
+    const result =
+      document.getElementById("result");
+
+    result.style.display = "block";
+
+    result.innerHTML = `
+
+      <h3>✅ Pesanan Berhasil Dibuat</h3>
+
+      <p>
+        ID Pesanan:
+        <b>${orderId}</b>
+      </p>
+
+      <p>
+        Status:
+        <b>${data.payment_status || "Menunggu Pembayaran"}</b>
+      </p>
+
+      <div class="payment">
+
+        <h3>💳 QRIS ARKAN STORE</h3>
+
+        <p class="note">
+          Scan QRIS berikut menggunakan aplikasi
+          pembayaran yang mendukung QRIS.
+        </p>
+
+        <img
+          src="qris.jpg"
+          alt="QRIS ARKAN STORE"
+        >
+
+        <div>Nominal Pembayaran:</div>
+
+        <div class="payment-amount">
+          ${amount}
+        </div>
+
+        <p class="note">
+          Setelah pembayaran berhasil,
+          tekan tombol di bawah untuk konfirmasi
+          kepada admin.
+        </p>
+
+        <a
+          class="whatsapp"
+          href="https://wa.me/${ADMIN}?text=${message}"
+          target="_blank"
+        >
+          📱 Saya Sudah Bayar
+        </a>
+
+        <p class="note">
+          WhatsApp Admin:<br>
+          <b>087781560968</b>
+        </p>
+
+      </div>
+    `;
+
+  }catch(error){
+
+    alert(
+      "Pesanan tidak dapat dibuat. "+
+      "Pastikan server/API website aktif."
+    );
+
+  }
+}
+
+</script>
+
+</body>
+   </html>

@@ -79,4 +79,83 @@
     }
 
     button {
-      width: 
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: white;
+      color: #050b12;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.85;
+    }
+
+    footer {
+      text-align: center;
+      color: #888;
+      margin-top: 50px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    ARKAN STORE
+  </header>
+
+  <main class="container">
+
+    <h1>ARKAN STORE</h1>
+
+    <p class="subtitle">
+      Top Up Game &amp; Joki Ring
+    </p>
+
+    <h2 class="section-title">
+      Produk
+    </h2>
+
+    <div class="products">
+
+      <div class="card">
+        <h2>Top Up Game</h2>
+        <p class="coin">Layanan top up game</p>
+        <p class="price">Mulai Rp5.000</p>
+
+        <button onclick="order('Top Up Game')">
+          Pesan Sekarang
+        </button>
+      </div>
+
+      <div class="card">
+        <h2>Joki Ring</h2>
+        <p class="coin">Layanan joki sesuai kebutuhan</p>
+        <p class="price">Mulai Rp10.000</p>
+
+        <button onclick="order('Joki Ring')">
+          Pesan Sekarang
+        </button>
+      </div>
+
+    </div>
+
+    <footer>
+      © 2026 ARKAN STORE
+    </footer>
+
+  </main>
+
+  <script>
+    function order(product) {
+      alert("Kamu memilih: " + product);
+    }
+  </script>
+
+</body>
+</html>
